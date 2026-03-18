@@ -1,0 +1,45 @@
+-- HD Texture DLC Unlocker
+
+local T_DLC = sdk.find_type_definition("app.dlc.DlcService")
+
+if not T_DLC then
+    log.error("[HD] app.dlc.DlcService not found!")
+    return
+end
+
+local function hook_method_by_name_prefix(prefix)
+    for i, m in ipairs(T_DLC:get_methods()) do
+        local name = m:get_name()
+        if name == prefix or name:sub(1, #prefix) == prefix then
+            local ok, err = pcall(function()
+                sdk.hook(m,
+                    function(args) thread.get_hook_storage().f = true end,
+                    function(retval)
+                        if thread.get_hook_storage().f then return sdk.to_ptr(true) end
+                        return retval
+                    end
+                )
+            end)
+            if ok then
+                log.info("[HD] Hooked: " .. name)
+            else
+                log.info("[HD] Hook failed: " .. name .. " | " .. tostring(err))
+            end
+        end
+    end
+end
+
+-- Main method controlling HD texture button active state
+hook_method_by_name_prefix("isEnabledHqTextureDLC")
+
+-- General DLC availability
+hook_method_by_name_prefix("isAvailableDLC")
+hook_method_by_name_prefix("isAvailable")
+
+-- Mounted state 
+hook_method_by_name_prefix("isMounted")
+
+-- DLC check completed 
+hook_method_by_name_prefix("isDlcCheckCompleted")
+
+log.info("[HD] Done.")
