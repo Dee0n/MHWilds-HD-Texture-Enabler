@@ -25,5 +25,5 @@ The Antrix script explicitly excludes the HD Pack (ID 3) to prevent crashes for 
 * **Change to:** `st.force_true = true`
 
 ## Credits
-* Developed by **Nmui6**
+* Developed by **Dee0n**
 * Special thanks to the REFramework team.
